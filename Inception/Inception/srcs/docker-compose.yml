@@ -1,0 +1,66 @@
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: requirements/nginx/
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - frontend
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: requirements/wordpress/
+    expose:
+      - "9000"
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
+    networks:
+      - frontend
+      - backend
+    restart: unless-stopped
+    env_file:
+      - .env
+      - ../secrets/Credentials
+
+  mariadb:
+    container_name: mariadb
+    build:
+      context: requirements/mariadb/
+    expose:
+      - "3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - backend
+    restart: unless-stopped
+    env_file:
+      - .env
+      - ../secrets/Credentials
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/alpicard/data/mariadb
+
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/alpicard/data/wordpress
+
+networks:
+  frontend:
+  backend:
