@@ -1,0 +1,11 @@
+
+DOMAIN_NAME=https://alpicard.42.fr
+
+# WordPress info
+WORDPRESS_TITLE=Inception
+
+# MYSQL info
+MYSQL_HOST=mariadb
+MYSQL_DATABASE=wordpress_db
+MYSQL_USER=mysql
+
